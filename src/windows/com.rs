@@ -82,12 +82,40 @@ impl COMPort {
         }
     }
 
+    /// Primative method for pulling information about device driver
+    /// For full details see: https://msdn.microsoft.com/en-us/library/windows/desktop/aa363189%28v=vs.85%29.aspx
     pub fn driver_properties(&mut self) -> ::Result<Box<LPCOMMPROP>> {
-        let mut b = Box::new(LPCOMMPROP::default());
+        let b = Box::new(LPCOMMPROP::default());
         let ptr: *mut LPCOMMPROP = unsafe{ mem::transmute(b)};
         match unsafe{ GetCommProperties( self.handle, ptr) } {
             0 => Err(super::error::last_os_error()),
             _ => Ok(unsafe{mem::transmute(ptr)})
+        }
+    }
+
+    /// Purge operations
+    pub fn purge_rxabort(&mut self) -> ::Result<()> {
+        match unsafe{ PurgeComm(self.handle, PURGE_RXABORT ) } {
+            0 => Err(super::error::last_os_error()),
+            _ => Ok(())
+        }
+    }
+    pub fn purge_rxclear(&mut self) -> ::Result<()> {
+        match unsafe{ PurgeComm(self.handle, PURGE_RXCLEAR ) } {
+            0 => Err(super::error::last_os_error()),
+            _ => Ok(())
+        }
+    }
+    pub fn purge_txabort(&mut self) -> ::Result<()> {
+        match unsafe{ PurgeComm(self.handle, PURGE_TXABORT ) } {
+            0 => Err(super::error::last_os_error()),
+            _ => Ok(())
+        }
+    }
+    pub fn purge_txclear(&mut self) -> ::Result<()> {
+        match unsafe{ PurgeComm(self.handle, PURGE_TXCLEAR ) } {
+            0 => Err(super::error::last_os_error()),
+            _ => Ok(())
         }
     }
 }

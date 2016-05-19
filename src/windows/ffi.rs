@@ -168,6 +168,12 @@ pub struct LPCOMMPROP {
     pub wcProvChar: [WCHAR;1],
 }
 
+//Purge flags
+pub const PURGE_RXABORT: DWORD = 0x0002;
+pub const PURGE_RXCLEAR: DWORD = 0x0008;
+pub const PURGE_TXABORT: DWORD = 0x0001;
+pub const PURGE_TXCLEAR: DWORD = 0x0004;
+
 extern "system" {
     pub fn CreateFileW(lpFileName: LPCWSTR,
                        dwDesiredAccess: DWORD,
@@ -195,6 +201,9 @@ extern "system" {
     pub fn SetCommTimeouts(hFile: HANDLE, lpCommTimeouts: *const COMMTIMEOUTS) -> BOOL;
     pub fn EscapeCommFunction(hFile: HANDLE, dwFunc: DWORD) -> BOOL;
     pub fn GetCommModemStatus(hFile: HANDLE, lpModemStat: *mut DWORD) -> BOOL;
-    pub fn GetCommProperties( hFile: HANDLE, lpCommProp: *mut LPCOMMPROP ) -> BOOL;
+
     pub fn GetLastError() -> DWORD;
+
+    pub fn GetCommProperties(hFile: HANDLE, lpCommProp: *mut LPCOMMPROP ) -> BOOL;
+    pub fn PurgeComm(hFile: HANDLE, dwFlags: DWORD ) -> BOOL;
 }
