@@ -118,6 +118,33 @@ impl COMPort {
             _ => Ok(())
         }
     }
+
+    /// status operations
+    pub fn bytes_in(&mut self) -> ::Result<u64> {
+        let b = Box::new(COMSTAT::default());
+        let p: *mut COMSTAT = unsafe{ mem::transmute(b)};
+        let mut status: DWORD = unsafe { mem::uninitialized() };
+        match unsafe{ ClearCommError( self.handle, &mut status, p ) } {
+            0 => Err(super::error::last_os_error()),
+            _ => {
+                let p: &COMSTAT = unsafe{ mem::transmute(p)};
+                Ok(p.cbInQue as u64)
+            }
+        }
+    }
+    /// status operations
+    pub fn bytes_out(&mut self) -> ::Result<u64> {
+        let b = Box::new(COMSTAT::default());
+        let p: *mut COMSTAT = unsafe{ mem::transmute(b)};
+        let mut status: DWORD = unsafe { mem::uninitialized() };
+        match unsafe{ ClearCommError( self.handle, &mut status, p ) } {
+            0 => Err(super::error::last_os_error()),
+            _ => {
+                let p: &COMSTAT = unsafe{ mem::transmute(p)};
+                Ok(p.cbOutQue as u64)
+            }
+        }
+    }
 }
 
 impl Drop for COMPort {

@@ -145,6 +145,7 @@ pub struct COMMTIMEOUTS {
     pub WriteTotalTimeoutConstant: DWORD
 }
 
+//COMMPROP structure: https://msdn.microsoft.com/en-us/library/windows/desktop/aa363189%28v=vs.85%29.aspx
 #[derive(Copy,Clone,Debug,Default)]
 #[repr(C)]
 pub struct LPCOMMPROP {
@@ -168,11 +169,27 @@ pub struct LPCOMMPROP {
     pub wcProvChar: [WCHAR;1],
 }
 
-//Purge flags
+//Purge flags: https://msdn.microsoft.com/en-us/library/windows/desktop/aa363428%28v=vs.85%29.aspx
 pub const PURGE_RXABORT: DWORD = 0x0002;
 pub const PURGE_RXCLEAR: DWORD = 0x0008;
 pub const PURGE_TXABORT: DWORD = 0x0001;
 pub const PURGE_TXCLEAR: DWORD = 0x0004;
+
+//COMSTAT structure: https://msdn.microsoft.com/en-us/library/windows/desktop/aa363200%28v=vs.85%29.aspx
+#[derive(Copy,Clone,Debug,Default)]
+#[repr(C)]
+pub struct COMSTAT {
+    pub CtsHold:DWORD,
+    pub fDsrHold: DWORD,
+    pub fRlsdHold: DWORD,
+    pub fXoffHold: DWORD,
+    pub fXoffSent: DWORD,
+    pub fEof: DWORD,
+    pub fTxim: DWORD,
+    pub fReserved: DWORD,
+    pub cbInQue: DWORD,
+    pub cbOutQue: DWORD,
+}
 
 extern "system" {
     pub fn CreateFileW(lpFileName: LPCWSTR,
@@ -206,4 +223,5 @@ extern "system" {
 
     pub fn GetCommProperties(hFile: HANDLE, lpCommProp: *mut LPCOMMPROP ) -> BOOL;
     pub fn PurgeComm(hFile: HANDLE, dwFlags: DWORD ) -> BOOL;
+    pub fn ClearCommError(hFile: HANDLE, lpErrors: LPDWORD, lpStat: *mut COMSTAT ) -> BOOL;
 }
