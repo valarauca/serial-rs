@@ -145,6 +145,29 @@ pub struct COMMTIMEOUTS {
     pub WriteTotalTimeoutConstant: DWORD
 }
 
+#[derive(Copy,Clone,Debug,Default)]
+#[repr(C)]
+pub struct LPCOMMPROP {
+    pub wPacketLength: WORD,
+    pub wPacketVersion: WORD,
+    pub dwServiceMask: DWORD,
+    pub dwReserved1: DWORD,
+    pub dwMaxTxQueue: DWORD,
+    pub dwMaxRxQueue: DWORD,
+    pub dwMaxBaud: DWORD,
+    pub dwProvSubType: DWORD,
+    pub dwProvCapabilities: DWORD,
+    pub dwSettableParams: DWORD,
+    pub dwSettableBaud: DWORD,
+    pub wSettableData: WORD,
+    pub wSettableStopParity: WORD,
+    pub dwCurrentTxQueue: DWORD,
+    pub dwCurrentRxQueue: DWORD,
+    pub dwProvSpec1: DWORD,
+    pub dwProvSpec2: DWORD,
+    pub wcProvChar: [WCHAR;1],
+}
+
 extern "system" {
     pub fn CreateFileW(lpFileName: LPCWSTR,
                        dwDesiredAccess: DWORD,
@@ -172,6 +195,6 @@ extern "system" {
     pub fn SetCommTimeouts(hFile: HANDLE, lpCommTimeouts: *const COMMTIMEOUTS) -> BOOL;
     pub fn EscapeCommFunction(hFile: HANDLE, dwFunc: DWORD) -> BOOL;
     pub fn GetCommModemStatus(hFile: HANDLE, lpModemStat: *mut DWORD) -> BOOL;
-
+    pub fn GetCommProperties( hFile: HANDLE, lpCommProp: *mut LPCOMMPROP ) -> BOOL;
     pub fn GetLastError() -> DWORD;
 }

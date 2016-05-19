@@ -81,6 +81,15 @@ impl COMPort {
             _ => Ok(status & pin != 0)
         }
     }
+
+    pub fn driver_properties(&mut self) -> ::Result<Box<LPCOMMPROP>> {
+        let mut b = Box::new(LPCOMMPROP::default());
+        let ptr: *mut LPCOMMPROP = unsafe{ mem::transmute(b)};
+        match unsafe{ GetCommProperties( self.handle, ptr) } {
+            0 => Err(super::error::last_os_error()),
+            _ => Ok(unsafe{mem::transmute(ptr)})
+        }
+    }
 }
 
 impl Drop for COMPort {
