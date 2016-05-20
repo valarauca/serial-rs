@@ -93,6 +93,22 @@ impl COMPort {
         }
     }
 
+    /// Get # of bytes in RX_Buffer
+    pub fn tx_buffer(&mut self) -> ::Result<u32> {
+        match self.driver_properties()  {
+            Err(e) => Err(e),
+            Ok(x) => Ok(x.dwCurrentTxQueue)
+        }
+    }
+
+    /// Get # of bytes in RX Buffer
+    pub fn rx_buffer(&mut self) -> ::Result<u32> {
+        match self.driver_properties() {
+            Err(e) => Err(e),
+            Ok(x) => Ok(x.dwCurrentRxQueue)
+        }
+    }
+
     /// Purge operations
     pub fn purge_rxabort(&mut self) -> ::Result<()> {
         match unsafe{ PurgeComm(self.handle, PURGE_RXABORT ) } {
