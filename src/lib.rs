@@ -23,8 +23,6 @@ pub mod prelude {
     pub use ::{SerialPort,SerialPortSettings};
 }
 
-#[cfg(unix)]
-pub mod posix;
 
 #[cfg(windows)]
 pub mod windows;

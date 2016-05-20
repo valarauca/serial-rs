@@ -161,6 +161,14 @@ impl COMPort {
             }
         }
     }
+
+    /// write settings
+    pub fn write_settings(&mut self, settings: &COMSettings) -> ::Result<()> {
+        match unsafe { SetCommState(self.handle, &settings.inner) } {
+            0 => Err(super::error::last_os_error()),
+            _ => Ok(())
+        }
+    }
 }
 
 impl Drop for COMPort {
